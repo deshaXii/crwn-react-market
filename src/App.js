@@ -8,7 +8,7 @@ import { auth, createUserDocument } from "./firebase/utlis";
 
 import "./App.scss";
 import Header from "./components/header/component";
-import { HomePage } from "./pages/homepage/page.component";
+import { HomePage } from "./pages/homepage/component";
 import { SignInAndSignUpPage } from "./pages/sign-in-and-sign-up/component";
 
 import ShopPage from "./pages/shop/component";
@@ -19,6 +19,7 @@ class App extends React.Component {
 
   componentDidMount() {
     const { setCurrentUser } = this.props;
+
     this.unSubsctibeFromAuth = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const userRef = await createUserDocument(user);
@@ -32,7 +33,6 @@ class App extends React.Component {
       setCurrentUser(user);
     });
   }
-
   componentWillUnmount() {
     this.unSubsctibeFromAuth();
   }
@@ -43,7 +43,7 @@ class App extends React.Component {
         <Header />
         <Switch>
           <Route path="/" component={HomePage} exact />
-          <Route path="/shop" component={ShopPage}  />
+          <Route path="/shop" component={ShopPage} />
           <Route path="/checkout" component={CheckoutPage} exact />
           <Route
             path="/signin"
@@ -63,8 +63,8 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  currentUser: state.user.currentUser
-})
+  currentUser: state.user.currentUser,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   setCurrentUser: (user) => dispatch(setCurrentUser(user)),

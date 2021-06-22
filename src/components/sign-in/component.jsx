@@ -1,7 +1,7 @@
 import React from "react";
 import { FormInput } from "../form-input/component";
 import { Button } from "../button/component";
-import { auth, signInWithGoogle } from "../../firebase/utlis";
+import { auth, signInWithGoogle, signInWithGithub } from "../../firebase/utlis";
 import "./style.scss";
 
 class SignIn extends React.Component {
@@ -56,7 +56,10 @@ class SignIn extends React.Component {
           <div className="buttons">
             <Button type="submit">Sign In</Button>
             <Button type="button" isGoogleSignIn onClick={signInWithGoogle}>
-              Sign In With Google
+              Google SignIn
+            </Button>
+            <Button type="button" isGoogleSignIn onClick={signInWithGithub}>
+              Github SignIn
             </Button>
           </div>
         </form>

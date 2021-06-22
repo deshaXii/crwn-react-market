@@ -16,35 +16,63 @@ var config = {
 export const createUserDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
   const userRef = firestore.doc(`users/${userAuth.uid}`),
-        snapshot = await userRef.get()
-  
-  if (!snapshot.exists) {
-    const {displayName, email} = userAuth,
-          createdAt = new Date()
+    snapshot = await userRef.get();
 
+  if (!snapshot.exists) {
+    const { displayName, email } = userAuth,
+      createdAt = new Date();
     try {
       await userRef.set({
         displayName,
         email,
         createdAt,
-        ...additionalData
-      })
+        ...additionalData,
+      });
     } catch (e) {
-      console.log(e.message)
+      console.log(e.message);
     }
   }
-  return userRef
-}
+  return userRef;
+};
 
+export const addCollectionAndDocuments = async (collectionName, documents) => {
+  const collectionRef = firestore.collection(collectionName);
+  const batch = firestore.batch();
+  documents.forEach((doc) => {
+    const newDocRef = collectionRef.doc();
+    batch.set(newDocRef, doc);
+  });
+  return await batch.commit();
+};
+
+export const convertCollectionsSnapshotToMap = (collectionSnapshot) => {
+  const convertedCollection = collectionSnapshot.docs.map((doc) => {
+    const { title, items } = doc.data();
+    return {
+      id: doc.id,
+      routeName: encodeURI(title.toLowerCase()),
+      title,
+      items
+    }
+  });
+
+  return convertedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection
+    return accumulator
+  }, {})
+};
 
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt: "select_account" });
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
 
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
+export const signInWithGoogle = () => auth.signInWithPopup(googleProvider);
+
+var githubProvider = new firebase.auth.GithubAuthProvider();
+export const signInWithGithub = () => auth.signInWithPopup(githubProvider);
 
 export default firebase;

@@ -4,7 +4,8 @@ import { ReactComponent as Logo } from "./images/logo.svg";
 import { auth } from "../../firebase/utlis";
 import { connect } from "react-redux";
 
-import "./style.scss";
+import {HeaderContainer, OptionsContainer, LogoContainer, LinkContainer} from './component.styles'
+
 import CartIcon from "../cart-icon/component";
 import CartDropdown from "../cart-dropdown/component";
 import { selectCurrentUser } from "../../redux/user/selectors";
@@ -12,21 +13,21 @@ import { selectCartHidden } from "../../redux/cart/selectors";
 import { createStructuredSelector } from "reselect";
 
 const Header = ({ currentUser, hidden }) => (
-  <header className="header">
-    <div className="logo-container">
+  <HeaderContainer>
+    <LogoContainer>
       <Logo />
-    </div>
-    <ul className="links-list">
-      <li className="link-item">
+    </LogoContainer>
+    <OptionsContainer>
+      <LinkContainer>
         <Link to="/">Home</Link>
-      </li>
-      <li className="link-item">
+      </LinkContainer>
+      <LinkContainer>
         <Link to="/shop">Shop</Link>
-      </li>
-      <li className="link-item">
+      </LinkContainer>
+      <LinkContainer>
         <Link to="/contact">Contact</Link>
-      </li>
-      <li className="link-item">
+      </LinkContainer>
+      <LinkContainer>
         {currentUser ? (
           <button
             type="click"
@@ -41,13 +42,13 @@ const Header = ({ currentUser, hidden }) => (
         ) : (
           <Link to="/signin">Sign in</Link>
         )}
-      </li>
-      <li className="link-item">
+      </LinkContainer>
+      <LinkContainer>
         <CartIcon />
-      </li>
-    </ul>
+      </LinkContainer>
+    </OptionsContainer>
     {!hidden ? <CartDropdown /> : ""}
-  </header>
+  </HeaderContainer>
 );
 
 // if you have multiline you should use
